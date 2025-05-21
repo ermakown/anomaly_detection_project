@@ -38,7 +38,7 @@ class AnomalyDetector:
         )
         model.fit(X_scale)
         self.models[resource] = model
-        
+
         print(f'[INFO] Для "{resource.title()}" модель успешно обучена.')
 
     def predict(self, data: pd.DataFrame, resource: str) -> None:
