@@ -2,12 +2,14 @@ import pandas as pd
 
 
 class DataPrepare:
-    def __init__(self, path: str):
-        self.path = path
-        self.data = None
+    def __init__(self):
+        self.path: None | str = None
+        self.data: None | pd.DataFrame = None
 
-    def load_data(self) -> None:
+    def load_data(self, path: str) -> None:
+        self.path = path
         print("[INFO] Выполняется загрузка данных из файлов...")
+
         self.data = pd.read_csv(self.path)
         if isinstance(self.data, pd.DataFrame):
             print(
@@ -19,10 +21,10 @@ class DataPrepare:
             )
 
     def prepare(self) -> None:
-        self.data["Datetime"] = pd.to_datetime(self.data["Date"] + " " + self.data["Time"])
+        self.data["Datetime"] = pd.to_datetime(
+            self.data["Date"] + " " + self.data["Time"]
+        )
         self.data = self.data.sort_values("Datetime")
-        # del self.data["Date"]
-        # del self.data["Time"]
 
         if "Global_active_power" in self.data.columns:
             self.data.rename(columns={"Global_active_power": "value"}, inplace=True)
@@ -38,3 +40,15 @@ class DataPrepare:
         print(
             "[INFO] Обработка и подготовка данных завершены. Данные готовы к обучению модели."
         )
+
+    def drop_column(self, column: str) -> None:
+        if column in self.data.columns:
+            del self.data[column]
+        else:
+            raise ValueError(
+                f'Столбца "{column}" не существует в наборе данных.'
+            )
+
+    @property
+    def get_data(self) -> pd.DataFrame:
+        return self.data
