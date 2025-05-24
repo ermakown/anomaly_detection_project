@@ -2,10 +2,12 @@
 node_modules/
 
 # Игнорировать файлы .env
+venv/
 .env
 
 # Игнорировать логи
 *.log
+*.tmp
 
 # Игнорировать билды
 /dist/
@@ -15,3 +17,7 @@ node_modules/
 .idea/
 .vscode/
 *.swp
+
+# Кэш Python
+__pycache__/
+*.pyc
