@@ -12,17 +12,14 @@ router = APIRouter()
 @router.post("/upload")
 async def upload_dataset(file: UploadFile = File(...), resource: str = Form(...)):
     try:
-        # Чтение файла
         contents = await file.read()
         df = pd.read_csv(pd.io.common.BytesIO(contents))
 
-        # Подготовка данных
         dp = DataPrepare()
         dp.data = df
         dp.prepare()
         df = dp.get_data
 
-        # Запись в БД
         async with AsyncSessionLocal() as session:
             await session.execute(
                 delete(crud.RawMeasurement).where(

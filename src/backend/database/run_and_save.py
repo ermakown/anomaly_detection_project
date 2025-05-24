@@ -5,7 +5,9 @@ from backend.database import crud
 from backend.ml.ml_models.preprocessing import DataPrepare
 from backend.ml.ml_models.anomaly_detection import AnomalyDetector
 
-CSV_PATH = "C:/Users/Vladimir/Desktop/anomaly_detection_project/src/backend/ml/ml_data_input/electricity_data_prepared.csv"
+CSV_PATH = (
+    "C:/Users/Vladimir/Desktop/anomaly_detection_project/src/backend/ml/ml_data_input/electricity_data_prepared.csv"
+    )
 RESOURCE = "electricity"
 
 

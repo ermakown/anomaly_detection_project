@@ -33,7 +33,7 @@ async def save_detected_anomalies(
 async def get_anomalies_by_resource(session: AsyncSession, resource: str) -> List[dict]:
     result = await session.execute(
         select(Measurement).where(
-            Measurement.resource == resource, Measurement.is_anomaly == True
+            Measurement.resource == resource, Measurement.is_anomaly is True
         )
     )
     return [
