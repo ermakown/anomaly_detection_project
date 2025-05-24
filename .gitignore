@@ -1,23 +1,45 @@
-# Игнорировать папку node_modules
-node_modules/
+# Файлы Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg-info/
+*.egg
 
-# Игнорировать файлы .env
+# Виртуальное окружение
 venv/
+.env/
+.venv/
+env/
+ENV/
+
+# Файлы переменных окружения
 .env
+.env.local
+.env.*.local
 
-# Игнорировать логи
+# Логи и отладочные файлы
 *.log
-*.tmp
+*.sqlite
+*.sqlite3
 
-# Игнорировать билды
-/dist/
-/build/
-
-# Игнорировать файлы IDE
+# IDE и редакторы
 .idea/
 .vscode/
 *.swp
+*.swo
+*~
 
-# Кэш Python
-__pycache__/
-*.pyc
+# Тестовые и сборочные файлы
+build/
+dist/
+*.exe
+*.out
+*.spec
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+desktop.ini
