@@ -57,7 +57,7 @@ async def get_anomalies(resource: str):
             {
                 "datetime": str(row["datetime"]),
                 "value": row["value"],
-                "resource": row["resource"]
+                "resource": row["resource"],
             }
             for row in anomalies
         ]

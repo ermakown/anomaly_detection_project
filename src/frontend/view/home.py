@@ -4,126 +4,103 @@ import flet as ft
 class HomePageView:
     def __init__(self, app):
         self.app = app
+        self.logo = self.app.gradient_noma(ft.Text("Noma", size=130, font_family="sf"))
+        self.hello_text = ft.Text(
+            "Сделайте свою жизнь\nпонятнее", font_family="sf", size=35, weight=ft.FontWeight.BOLD
+        )
+        self.description = ft.Text(
+            "Самостоятельно анализируйте потребление\nресурсов в Вашем доме",
+            font_family="sf",
+            size=18,
+        )
 
     def build(self) -> ft.View:
-        textclr, logo_src, sidebar_color = self.app.update_colors()
-
-        button_back = ft.IconButton(
-            icon=ft.Icons.ARROW_BACK_IOS_ROUNDED,
-            on_click=lambda e: self.app.page.go(
-                "/category", ft.PageTransitionTheme.PREDICTIVE
-            ),
-            icon_color=textclr,
-        )
-
-        sidebar = ft.Container(
-            width=80,
-            bgcolor=sidebar_color,
-            padding=10,
-            border_radius=20,
-            expand=False,
-            content=ft.Column(
-                expand=True,
-                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                alignment=ft.MainAxisAlignment.CENTER,
-                controls=[
-                    ft.IconButton(
-                        icon=ft.Icons.HOME_ROUNDED,
-                        icon_color=textclr,
-                        icon_size=25,
-                        tooltip="Главная",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                    ft.IconButton(
-                        icon=ft.Icons.DOWNLOAD_ROUNDED,
-                        icon_color=textclr,
-                        icon_size=25,
-                        tooltip="Загрузка данных",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                    ft.Container(expand=True),
-                    ft.IconButton(
-                        icon=ft.Icons.LIGHTBULB_ROUNDED,
-                        icon_color=ft.Colors.ORANGE_400,
-                        icon_size=45,
-                        tooltip="Электричество",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                    ft.IconButton(
-                        icon=ft.Icons.WATER_DROP_ROUNDED,
-                        icon_color=ft.Colors.BLUE_400,
-                        icon_size=45,
-                        tooltip="Вода",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                    ft.IconButton(
-                        icon=ft.Icons.GAS_METER_ROUNDED,
-                        icon_color=ft.Colors.RED_400,
-                        icon_size=45,
-                        tooltip="Газ",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                    ft.Container(expand=True),
-                    ft.IconButton(
-                        icon=ft.Icons.DESCRIPTION_ROUNDED,
-                        icon_color=textclr,
-                        icon_size=25,
-                        tooltip="Инфо",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                    ft.IconButton(
-                        icon=self.app.get_theme_icon(),
-                        on_click=self.app.toggle_theme,
-                        icon_color=textclr,
-                        icon_size=25,
-                        tooltip="Тема",
-                        style=ft.ButtonStyle(overlay_color=sidebar_color),
-                    ),
-                ],
-            ),
-        )
+        textclr = self.app.update_text_colors()
 
         return ft.View(
-            "/first_page",
+            "/home",
             controls=[
-                ft.AppBar(
-                    center_title=True,
-                    title=ft.Row(
-                        alignment=ft.MainAxisAlignment.CENTER,
-                        vertical_alignment=ft.CrossAxisAlignment.CENTER,
-                        spacing=0,
-                        controls=[
-                            ft.Image(src=logo_src, width=40, height=40),
-                            ft.Container(width=10),
-                            ft.Text("Нома", color=textclr, font_family="jura"),
-                        ],
-                    ),
-                ),
+                self.app.app_bar(),
                 ft.Row(
                     [
-                        sidebar,
-                        ft.Column(
-                            [
-                                ft.Container(
-                                    content=ft.Column(
-                                        controls=[button_back],
+                        ft.Container(
+                            bgcolor=None,
+                            width=650,
+                            border_radius=10,
+                            padding=ft.Padding(0, 50, 0, 0),
+                            content=ft.Row(
+                                controls=[
+                                    ft.Container(width=100),
+                                    ft.Column(
+                                        controls=[
+                                            self.logo,
+                                            self.hello_text,
+                                            self.description,
+                                            ft.Row(controls=[ft.Text("\n")]),
+                                        ],
                                         alignment=ft.MainAxisAlignment.CENTER,
-                                        horizontal_alignment=ft.MainAxisAlignment.CENTER,
+                                        spacing=0,
+                                        tight=True,
+                                        horizontal_alignment=ft.CrossAxisAlignment.START,
                                     ),
-                                    expand=True,
-                                    bgcolor="blue",
-                                    border_radius=20,
-                                )
-                            ],
-                            alignment=ft.MainAxisAlignment.CENTER,
-                            horizontal_alignment=ft.MainAxisAlignment.CENTER,
-                            expand=True,
-                            spacing=0,
+                                ]
+                            ),
+                        ),
+                        ft.Container(
+                            bgcolor=None,
+                            width=450,
+                            alignment=ft.alignment.top_center,
+                            content=ft.Column(
+                                controls=[
+                                    ft.Row(
+                                        controls=[
+                                            ft.Row(
+                                                controls=[
+                                                    ft.Icon(
+                                                        ft.Icons.WATER_DROP_ROUNDED,
+                                                        size=100,
+                                                        color=textclr,
+                                                    ),
+                                                    ft.Icon(
+                                                        ft.Icons.ELECTRICAL_SERVICES_ROUNDED,
+                                                        size=400,
+                                                        color=textclr,
+                                                    ),
+                                                    ft.Icon(
+                                                        ft.Icons.GAS_METER_ROUNDED,
+                                                        size=180,
+                                                        color=textclr,
+                                                    ),
+                                                ],
+                                                alignment=ft.MainAxisAlignment.START,
+                                            ),
+                                        ],
+                                        alignment=ft.MainAxisAlignment.START,
+                                        spacing=0,
+                                    ),
+                                    ft.Row(
+                                        controls=[
+                                            self.app.gradient_noma(
+                                                ft.Icon(
+                                                    ft.Icons.AUTO_AWESOME_ROUNDED,
+                                                    size=140,
+                                                    color=textclr,
+                                                )
+                                            )
+                                        ],
+                                        alignment=ft.MainAxisAlignment.END,
+                                        spacing=0,
+                                    ),
+                                ],
+                                alignment=ft.MainAxisAlignment.CENTER,
+                                spacing=0,
+                                horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                            ),
+                            padding=ft.Padding(0, 0, 0, 0),
                         ),
                     ],
                     expand=True,
                     spacing=0,
-                    alignment=ft.MainAxisAlignment.CENTER,
                 ),
             ],
         )

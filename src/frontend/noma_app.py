@@ -1,5 +1,5 @@
+from typing import Union
 import flet as ft
-from view.main_page import MainView
 from view.category_page import CategoryView
 from view.home import HomePageView
 
@@ -12,8 +12,10 @@ class NomaApp:
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
         self.page.padding = 20
         self.page.scroll = ft.ScrollMode.AUTO
-        self.page.fonts = {"jura": "/fonts/Jura.ttf"}
+        self.page.fonts = {"jura": "/fonts/Jura.ttf", "sf": "/fonts/System Font.ttf"}
         self.page.theme_mode = self.detect_theme_mode()
+        self.textclr: None | str = None
+        self.logo_src: None | str = None
 
         self.theme_button = ft.IconButton(
             icon=self.get_theme_icon(), on_click=self.toggle_theme
@@ -24,10 +26,13 @@ class NomaApp:
 
         self.page.on_route_change = self.route_change
         self.views = {
-            "/": MainView,
             "/category": CategoryView,
             "/home": HomePageView,
         }
+
+        self.app_bar_style = ft.ButtonStyle(
+            text_style=ft.TextStyle(color=self.textclr, size=18, font_family="sf")
+        )
 
     def detect_theme_mode(self) -> ft.ThemeMode:
 
@@ -54,20 +59,107 @@ class NomaApp:
         self.theme_button.icon = self.get_theme_icon()
         self.route_change(None)
 
-    def update_colors(self) -> tuple[str, str, str]:
+    def gradient_noma(self, target: Union[ft.Text, ft.Icon]) -> ft.ShaderMask:
+        return ft.ShaderMask(
+            content=target,
+            blend_mode=ft.BlendMode.SRC_IN,
+            shader=ft.LinearGradient(
+                begin=ft.alignment.center_left,
+                end=ft.alignment.center_right,
+                colors=[
+                    ft.Colors.BLUE_400,
+                    ft.Colors.INDIGO_500,
+                    ft.Colors.PURPLE_400,
+                    ft.Colors.DEEP_PURPLE_300,
+                ],
+                stops=[0.0, 0.4, 0.7, 1.0],
+                tile_mode=ft.GradientTileMode.MIRROR,
+            ),
+        )
+
+    def update_logo_colors(self) -> str:
         if self.page.theme is None:
             self.page.theme = ft.Theme()
 
         if self.page.theme_mode == ft.ThemeMode.DARK:
-            textclr = "white"
-            logo_src = "/logo/logo_white_blue.png"
-            sidebar_color = "#111418"
+            self.logo_src = "/logo/logo_white.png"
         else:
-            textclr = "black"
-            logo_src = "/logo/logo_black_blue.png"
-            sidebar_color = "#f8f9ff"
+            self.logo_src = "/logo/logo_black.png"
 
-        return textclr, logo_src, sidebar_color
+        return self.logo_src
+
+    def update_text_colors(self) -> str:
+        if self.page.theme is None:
+            self.page.theme = ft.Theme()
+
+        if self.page.theme_mode == ft.ThemeMode.DARK:
+            self.textclr = "white"
+        else:
+            self.textclr = "black"
+
+        return self.textclr
+
+    def app_bar(self) -> ft.AppBar:
+        self.update_logo_colors()
+        return ft.AppBar(
+            center_title=False,
+            title=ft.Row(
+                alignment=ft.MainAxisAlignment.START,
+                vertical_alignment=ft.CrossAxisAlignment.CENTER,
+                spacing=0,
+                controls=[
+                    ft.Image(src=self.logo_src, width=40, height=40),
+                    ft.Container(width=10),
+                    ft.Text("Noma", color=self.textclr, font_family="sf", size=18),
+                ],
+            ),
+            actions=[
+                ft.Row(
+                    controls=[
+                        ft.TextButton(
+                            text="Начать",
+                            style=self.app_bar_style,
+                            width=160,
+                            height=50,
+                            on_click=lambda e: self.page.go(
+                                "/category", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
+                        ft.TextButton(
+                            text="Главная",
+                            style=self.app_bar_style,
+                            width=160,
+                            height=50,
+                            on_click=lambda e: self.page.go(
+                                "/home", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
+                        self.theme_button,
+                    ],
+                    spacing=20,
+                ),
+                ft.PopupMenuButton(
+                    items=[
+                        ft.PopupMenuItem(icon=ft.Icons.PERSON_ROUNDED, text="Профиль"),
+                        ft.PopupMenuItem(),
+                        ft.PopupMenuItem(
+                            icon=ft.Icons.FILE_UPLOAD_ROUNDED,
+                            text="Добавить данные",
+                            on_click=lambda e: self.page.go(
+                                "/category", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
+                        ft.PopupMenuItem(),
+                        ft.PopupMenuItem(icon=ft.Icons.WATER_DROP_ROUNDED, text="Вода"),
+                        ft.PopupMenuItem(
+                            icon=ft.Icons.ELECTRICAL_SERVICES_ROUNDED,
+                            text="Электричество",
+                        ),
+                        ft.PopupMenuItem(icon=ft.Icons.GAS_METER_ROUNDED, text="Газ"),
+                    ]
+                ),
+            ],
+        )
 
     def route_change(self, e: ft.ControlEvent) -> None:
         self.page.views.clear()
@@ -78,4 +170,4 @@ class NomaApp:
         self.page.update()
 
     def run(self) -> None:
-        self.page.go("/")
+        self.page.go("/home")
