@@ -1,5 +1,6 @@
 from typing import Union
 import flet as ft
+import asyncio
 from view.category_page import CategoryView
 from view.home import HomePageView
 from view.resource_pages.water import WaterPage
@@ -26,11 +27,7 @@ class NomaApp:
         self.page.overlay.append(self.file_picker)
 
         self.page.on_route_change = self.route_change
-        self.views = {
-            "/category": CategoryView,
-            "/home": HomePageView,
-            "/water": WaterPage
-        }
+        self.views = {"/category": CategoryView, "/home": HomePageView, "/water": WaterPage}
 
         self.app_bar_style = ft.ButtonStyle(
             text_style=ft.TextStyle(color=self.textclr, size=18, font_family="sf")
@@ -181,9 +178,19 @@ class NomaApp:
     def route_change(self, e: ft.ControlEvent) -> None:
         self.page.views.clear()
         route = self.page.route
+
+        if route == "/water":
+            from view.resource_pages.water import WaterPage
+
+            view = asyncio.run(WaterPage(self).build_async())
+            self.page.views.append(view)
+            self.page.update()
+            return
+
         view_class = self.views.get(route)
         if view_class:
             self.page.views.append(view_class(self).build())
+
         self.page.update()
 
     def run(self) -> None:
