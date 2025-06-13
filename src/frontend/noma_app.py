@@ -2,6 +2,7 @@ from typing import Union
 import flet as ft
 from view.category_page import CategoryView
 from view.home import HomePageView
+from view.resource_pages.water import WaterPage
 
 
 class NomaApp:
@@ -28,6 +29,7 @@ class NomaApp:
         self.views = {
             "/category": CategoryView,
             "/home": HomePageView,
+            "/water": WaterPage
         }
 
         self.app_bar_style = ft.ButtonStyle(
@@ -150,12 +152,27 @@ class NomaApp:
                             ),
                         ),
                         ft.PopupMenuItem(),
-                        ft.PopupMenuItem(icon=ft.Icons.WATER_DROP_ROUNDED, text="Вода"),
+                        ft.PopupMenuItem(
+                            icon=ft.Icons.WATER_DROP_ROUNDED,
+                            text="Вода",
+                            on_click=lambda e: self.page.go(
+                                "/water", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
                         ft.PopupMenuItem(
                             icon=ft.Icons.ELECTRICAL_SERVICES_ROUNDED,
                             text="Электричество",
+                            on_click=lambda e: self.page.go(
+                                "/electricity", ft.PageTransitionTheme.PREDICTIVE
+                            ),
                         ),
-                        ft.PopupMenuItem(icon=ft.Icons.GAS_METER_ROUNDED, text="Газ"),
+                        ft.PopupMenuItem(
+                            icon=ft.Icons.GAS_METER_ROUNDED,
+                            text="Газ",
+                            on_click=lambda e: self.page.go(
+                                "/gas", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
                     ]
                 ),
             ],

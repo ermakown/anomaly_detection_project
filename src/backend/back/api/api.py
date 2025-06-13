@@ -3,7 +3,7 @@ from backend.database.db import AsyncSessionLocal
 from backend.database import crud
 from backend.ml.ml_models.preprocessing import DataPrepare
 from backend.ml.ml_models.anomaly_detection import AnomalyDetector
-from sqlalchemy import delete
+from sqlalchemy import delete, select
 import pandas as pd
 
 router = APIRouter()
@@ -62,3 +62,20 @@ async def get_anomalies(resource: str):
             for row in anomalies
         ]
         return {"resource": resource, "anomalies": result}
+
+
+@router.get("/measurements")
+async def get_measurements(resource: str):
+    async with AsyncSessionLocal() as session:
+        result = await session.execute(
+            select(crud.Measurement).where(crud.Measurement.resource == resource)
+        )
+        return [
+            {
+                "datetime": row.datetime.isoformat(),
+                "value": row.value,
+                "resource": row.resource,
+                "is_anomaly": row.is_anomaly
+            }
+            for row in result.scalars().all()
+        ]
