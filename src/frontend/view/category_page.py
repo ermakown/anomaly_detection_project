@@ -4,22 +4,7 @@ import flet as ft
 class CategoryView:
     def __init__(self, app):
         self.app = app
-        self.stars = ft.ShaderMask(
-            content=ft.Icon(ft.Icons.AUTO_AWESOME_ROUNDED, size=70),
-            blend_mode=ft.BlendMode.SRC_IN,
-            shader=ft.LinearGradient(
-                begin=ft.alignment.center_left,
-                end=ft.alignment.center_right,
-                colors=[
-                    ft.Colors.BLUE_400,
-                    ft.Colors.INDIGO_500,
-                    ft.Colors.PURPLE_400,
-                    ft.Colors.DEEP_PURPLE_300,
-                ],
-                stops=[0.0, 0.4, 0.7, 1.0],
-                tile_mode=ft.GradientTileMode.MIRROR,
-            ),
-        )
+        self.stars = self.app.gradient_noma(ft.Icon(ft.Icons.AUTO_AWESOME_ROUNDED, size=70))
 
     def build(self) -> ft.View:
         textclr = self.app.update_text_colors()
