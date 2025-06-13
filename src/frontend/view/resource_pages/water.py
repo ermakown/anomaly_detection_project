@@ -27,23 +27,12 @@ class WaterPage:
                 response = await client.get(
                     "http://127.0.0.1:8000/measurements?resource=water"
                 )
-
-                print(f"[DEBUG] status: {response.status_code}")
-                print(f"[DEBUG] json: {response.text[:200]}")
-
                 data = response.json()
-                print(f"[DEBUG] Кол-во записей: {len(data)}")
 
             df = pd.DataFrame(data)
             df["datetime"] = pd.to_datetime(df["datetime"])
             df["is_anomaly"] = df["is_anomaly"].astype(bool)
-
-            print(f"[DEBUG] DataFrame готов: {df.shape}")
-            print("[DEBUG] Вызываем generate_water_plot...")
             self.graph_path = generate_water_plot(df, theme=self.theme)
-            print("[DEBUG] graph_path =", self.graph_path)
-            print(f"[DEBUG] График сгенерирован: {self.graph_path}")
-
             self.anomalies_list = df[df["is_anomaly"] == True][
                 ["datetime", "value"]
             ].to_dict(orient="records")
