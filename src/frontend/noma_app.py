@@ -3,7 +3,7 @@ import flet as ft
 import asyncio
 from view.category_page import CategoryView
 from view.home import HomePageView
-from view.resource_pages.water import WaterPage
+from view.resource_pages.resource_page import ResourcePage
 
 
 class NomaApp:
@@ -27,7 +27,10 @@ class NomaApp:
         self.page.overlay.append(self.file_picker)
 
         self.page.on_route_change = self.route_change
-        self.views = {"/category": CategoryView, "/home": HomePageView, "/water": WaterPage}
+        self.views = {
+            "/category": CategoryView,
+            "/home": HomePageView
+        }
 
         self.app_bar_style = ft.ButtonStyle(
             text_style=ft.TextStyle(color=self.textclr, size=18, font_family="sf")
@@ -180,9 +183,46 @@ class NomaApp:
         route = self.page.route
 
         if route == "/water":
-            from view.resource_pages.water import WaterPage
 
-            view = asyncio.run(WaterPage(self).build_async())
+            view = asyncio.run(ResourcePage(
+                self,
+                resource="вода",
+                label="воды",
+                title="Показатели воды",
+                icon=ft.Icons.WATER_DROP_ROUNDED,
+                main_color="blue",
+                anomaly_color="violet"
+            ).build_async())
+            self.page.views.append(view)
+            self.page.update()
+            return
+
+        if route == "/electricity":
+
+            view = asyncio.run(ResourcePage(
+                self,
+                resource="электричество",
+                label="электричества",
+                title="Показатели электричества",
+                icon=ft.Icons.ELECTRICAL_SERVICES_ROUNDED,
+                main_color="orange",
+                anomaly_color="violet"
+            ).build_async())
+            self.page.views.append(view)
+            self.page.update()
+            return
+
+        if route == "/gas":
+
+            view = asyncio.run(ResourcePage(
+                self,
+                resource="газ",
+                label="газа",
+                title="Показатели газа",
+                icon=ft.Icons.GAS_METER_ROUNDED,
+                main_color="red",
+                anomaly_color="violet"
+            ).build_async())
             self.page.views.append(view)
             self.page.update()
             return
