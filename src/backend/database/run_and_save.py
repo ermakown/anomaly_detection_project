@@ -11,7 +11,7 @@ CSV_PATH = (
 RESOURCE = "electricity"
 
 
-async def main():
+async def main() -> None:
     print("[INFO] Загружаем и подготавливаем данные...")
 
     dp = DataPrepare()

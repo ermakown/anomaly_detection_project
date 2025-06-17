@@ -3,14 +3,14 @@ import pandas as pd
 
 class DataPrepare:
     def __init__(self):
-        self.path: None | str = None
+        self._path: None | str = None
         self.data: None | pd.DataFrame = None
 
     def load_data(self, path: str) -> None:
-        self.path = path
+        self._path = path
         print("[INFO] Выполняется загрузка данных из файлов...")
 
-        self.data = pd.read_csv(self.path)
+        self.data = pd.read_csv(self._path)
         if isinstance(self.data, pd.DataFrame):
             print(
                 f"[INFO] Данные успешно загружены: {self.data.shape[0]} строк, {self.data.shape[1]} столбцов."

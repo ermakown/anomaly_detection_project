@@ -6,8 +6,9 @@ class About:
         self._app = app
         self._text_color = self._app.update_text_colors()
         self._image_color = self._app.update_logo_colors()
-        self._name = self._app.gradient_noma(ft.Text("Noma", font_family="sf", size=100))
-        self._stars = self._app.gradient_noma(ft.Icon(ft.Icons.INSIGHTS_ROUNDED, size=100))
+        self._name = self._app.gradient_noma(
+            ft.Text("Noma", font_family="sf", size=100)
+        )
 
     def image_container(self) -> ft.Container:
         return ft.Container(
@@ -17,20 +18,12 @@ class About:
             padding=ft.Padding(100, 50, 0, 0),
             border_radius=10,
         )
-    
-    def name_with_stars(self) -> ft.Row:
-        return ft.Row(
-            controls=[
-                self._name,
-                self._stars
-            ]
-        )
 
     def info_text(self) -> ft.Container:
         return ft.Container(
             content=ft.Column(
                 controls=[
-                    self.name_with_stars(),
+                    self._name,
                     ft.Text(
                         "— это удобный инструмент для анализа потребления\n"
                         "воды, электроэнергии и газа. Загружайте данные, находите\n"

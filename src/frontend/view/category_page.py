@@ -6,15 +6,15 @@ import asyncio
 
 class CategoryView:
     def __init__(self, app):
-        self.app = app
-        self.selected_resource = "электричество"
-        self.text_color = self.app.update_text_colors()
+        self._app = app
+        self._selected_resource = "электричество"
+        self._text_color = self._app.update_text_colors()
 
-        self.stars = self.app.gradient_noma(
+        self._stars = self._app.gradient_noma(
             ft.Icon(ft.Icons.AUTO_AWESOME_SHARP, size=70)
         )
 
-        self.choose = ft.CupertinoSlidingSegmentedButton(
+        self._choose = ft.CupertinoSlidingSegmentedButton(
             thumb_color=ft.Colors.INDIGO_400,
             on_change=self.change_resource,
             controls=[
@@ -25,21 +25,21 @@ class CategoryView:
             selected_index=0,
         )
 
-        self.button = ft.ElevatedButton(
+        self._button = ft.ElevatedButton(
             text="Выберите CSV-файл",
-            on_click=lambda e: self.app.file_picker.pick_files(
+            on_click=lambda e: self._app._file_picker.pick_files(
                 allowed_extensions=["csv"]
             ),
-            color=self.text_color,
+            color=self._text_color,
             style=ft.ButtonStyle(
                 text_style=ft.TextStyle(size=24, font_family="sf"),
                 padding=20,
             ),
         )
 
-        self.status_text = ft.Text("", font_family="sf", size=18)
+        self._status_text = ft.Text("", font_family="sf", size=18)
 
-        self.goto_analysis_button = ft.ElevatedButton(
+        self._goto_analysis_button = ft.ElevatedButton(
             text="Перейти к анализу",
             visible=False,
             on_click=self.goto_resource_page,
@@ -51,30 +51,30 @@ class CategoryView:
             ),
         )
 
-        self.app.file_picker.on_result = lambda e: asyncio.run(self.upload_file(e))
+        self._app._file_picker.on_result = lambda e: asyncio.run(self.upload_file(e))
 
-    def change_resource(self, e: ft.ControlEvent):
-        index = self.choose.selected_index
-        self.selected_resource = ["электричество", "вода", "газ"][index]
+    def change_resource(self, e: ft.ControlEvent) -> None:
+        index = self._choose.selected_index
+        self._selected_resource = ["электричество", "вода", "газ"][index]
 
-    async def upload_file(self, e: ft.FilePickerResultEvent):
+    async def upload_file(self, e: ft.FilePickerResultEvent) -> None:
         if not e.files:
-            self.status_text.value = "Файл не выбран"
-            self.status_text.color = "red"
-            self.goto_analysis_button.visible = False
+            self._status_text.value = "Файл не выбран"
+            self._status_text.color = "red"
+            self._goto_analysis_button.visible = False
             self._update_controls()
             return
 
         file_path = e.files[0].path
-        self.status_text.value = "\nЗагрузка..."
-        self.status_text.color = "blue"
-        self.goto_analysis_button.visible = False
+        self._status_text.value = "\nЗагрузка..."
+        self._status_text.color = "blue"
+        self._goto_analysis_button.visible = False
         self._update_controls()
 
         try:
             with open(file_path, "rb") as f:
                 files = {"file": (os.path.basename(file_path), f, "text/csv")}
-                data = {"resource": self.selected_resource}
+                data = {"resource": self._selected_resource}
 
                 async with httpx.AsyncClient() as client:
                     response = await client.post(
@@ -82,44 +82,44 @@ class CategoryView:
                     )
 
             if response.status_code == 200:
-                self.status_text.value = "\nФайл успешно загружен и обработан!\n"
-                self.status_text.color = "green"
-                self.goto_analysis_button.visible = True
+                self._status_text.value = "\nФайл успешно загружен и обработан!\n"
+                self._status_text.color = "green"
+                self._goto_analysis_button.visible = True
             else:
-                self.status_text.value = f"\nОшибка: {response.text}"
-                self.status_text.color = "red"
-                self.goto_analysis_button.visible = False
+                self._status_text.value = f"\nОшибка: {response.text}"
+                self._status_text.color = "red"
+                self._goto_analysis_button.visible = False
 
         except Exception as ex:
-            self.status_text.value = f"\nОшибка загрузки: {str(ex)}"
-            self.status_text.color = "red"
-            self.goto_analysis_button.visible = False
+            self._status_text.value = f"\nОшибка загрузки: {str(ex)}"
+            self._status_text.color = "red"
+            self._goto_analysis_button.visible = False
 
         self._update_controls()
 
-    def goto_resource_page(self, e: ft.ControlEvent):
+    def goto_resource_page(self, e: ft.ControlEvent) -> None:
         route_map = {"электричество": "/electricity", "вода": "/water", "газ": "/gas"}
-        self.app.page.go(route_map.get(self.selected_resource, "/home"))
+        self._app._page.go(route_map.get(self._selected_resource, "/home"))
 
-    def _update_controls(self):
-        self.status_text.update()
-        self.goto_analysis_button.update()
-        self.button.color = self.app.update_text_colors()
-        self.button.update()
-        self.app.page.update()
+    def _update_controls(self) -> None:
+        self._status_text.update()
+        self._goto_analysis_button.update()
+        self._button.color = self._app.update_text_colors()
+        self._button.update()
+        self._app._page.update()
 
     def build(self) -> ft.View:
-        self.text_color = self.app.update_text_colors()
-        self.button.color = self.text_color
-        self.status_text.color = self.status_text.color or self.text_color
-        
+        self._text_color = self._app.update_text_colors()
+        self._button.color = self._text_color
+        self._status_text.color = self._status_text.color or self._text_color
+
         start = ft.Row(
             controls=[
-                self.stars,
+                self._stars,
                 ft.Text(
                     "\n\n\nДавайте начнём! Определитесь с категорией и загрузите данные",
                     size=40,
-                    color=self.text_color,
+                    color=self._text_color,
                     font_family="sf",
                     text_align=ft.TextAlign.CENTER,
                 ),
@@ -129,18 +129,18 @@ class CategoryView:
         return ft.View(
             "/category",
             [
-                self.app.app_bar(),
+                self._app.app_bar(),
                 ft.Column(
                     [
                         ft.Row([start], alignment=ft.MainAxisAlignment.CENTER),
-                        ft.Row([self.choose], alignment=ft.MainAxisAlignment.CENTER),
+                        ft.Row([self._choose], alignment=ft.MainAxisAlignment.CENTER),
                         ft.Row([ft.Text("\n")]),
-                        ft.Row([self.button], alignment=ft.MainAxisAlignment.CENTER),
+                        ft.Row([self._button], alignment=ft.MainAxisAlignment.CENTER),
                         ft.Row(
-                            [self.status_text], alignment=ft.MainAxisAlignment.CENTER
+                            [self._status_text], alignment=ft.MainAxisAlignment.CENTER
                         ),
                         ft.Row(
-                            [self.goto_analysis_button],
+                            [self._goto_analysis_button],
                             alignment=ft.MainAxisAlignment.CENTER,
                         ),
                     ],

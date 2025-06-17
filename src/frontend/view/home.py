@@ -3,21 +3,21 @@ import flet as ft
 
 class HomePageView:
     def __init__(self, app):
-        self.app = app
-        self.logo = self.app.gradient_noma(ft.Text("Noma", size=130, font_family="sf"))
-        self.hello_text = ft.Text(
+        self._app = app
+        self._logo = self._app.gradient_noma(ft.Text("Noma", size=130, font_family="sf"))
+        self._hello_text = ft.Text(
             "Сделайте свою жизнь\nпонятнее",
             font_family="sf",
             size=35,
             weight=ft.FontWeight.BOLD,
         )
-        self.description = ft.Text(
+        self._description = ft.Text(
             "Самостоятельно анализируйте потребление\nресурсов в Вашем доме",
             font_family="sf",
             size=18,
         )
 
-        self.text_color = self.app.update_text_colors()
+        self._text_color = self._app.update_text_colors()
 
     def page_logo(self) -> ft.Container:
         return ft.Container(
@@ -30,9 +30,9 @@ class HomePageView:
                     ft.Container(width=100),
                     ft.Column(
                         controls=[
-                            self.logo,
-                            self.hello_text,
-                            self.description,
+                            self._logo,
+                            self._hello_text,
+                            self._description,
                             ft.Row(controls=[ft.Text("\n")]),
                         ],
                         alignment=ft.MainAxisAlignment.CENTER,
@@ -58,17 +58,17 @@ class HomePageView:
                                     ft.Icon(
                                         ft.Icons.WATER_DROP_ROUNDED,
                                         size=100,
-                                        color=self.text_color,
+                                        color=self._text_color,
                                     ),
                                     ft.Icon(
                                         ft.Icons.ELECTRICAL_SERVICES_ROUNDED,
                                         size=400,
-                                        color=self.text_color,
+                                        color=self._text_color,
                                     ),
                                     ft.Icon(
                                         ft.Icons.GAS_METER_ROUNDED,
                                         size=180,
-                                        color=self.text_color,
+                                        color=self._text_color,
                                     ),
                                 ],
                                 alignment=ft.MainAxisAlignment.START,
@@ -79,11 +79,11 @@ class HomePageView:
                     ),
                     ft.Row(
                         controls=[
-                            self.app.gradient_noma(
+                            self._app.gradient_noma(
                                 ft.Icon(
                                     ft.Icons.INSIGHTS_ROUNDED,
                                     size=140,
-                                    color=self.text_color,
+                                    color=self._text_color,
                                 )
                             )
                         ],
@@ -102,11 +102,10 @@ class HomePageView:
         return ft.Row(controls=[self.page_logo(), self.icons()], expand=True, spacing=0)
 
     def build(self) -> ft.View:
-
         return ft.View(
             "/home",
             controls=[
-                self.app.app_bar(),
+                self._app.app_bar(),
                 self.hello()
             ],
         )
