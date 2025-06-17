@@ -4,13 +4,16 @@ from backend.database import crud
 from backend.ml.ml_models.preprocessing import DataPrepare
 from backend.ml.ml_models.anomaly_detection import AnomalyDetector
 from sqlalchemy import delete, select
+from typing import List
 import pandas as pd
 
 router = APIRouter()
 
 
 @router.post("/upload")
-async def upload_dataset(file: UploadFile = File(...), resource: str = Form(...)) -> dict:
+async def upload_dataset(
+    file: UploadFile = File(...), resource: str = Form(...)
+) -> dict:
     try:
         contents = await file.read()
         df = pd.read_csv(pd.io.common.BytesIO(contents))
@@ -49,23 +52,8 @@ async def upload_dataset(file: UploadFile = File(...), resource: str = Form(...)
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@router.get("/anomalies")
-async def get_anomalies(resource: str) -> dict:
-    async with AsyncSessionLocal() as session:
-        anomalies = await crud.get_anomalies_by_resource(session, resource)
-        result = [
-            {
-                "datetime": str(row["datetime"]),
-                "value": row["value"],
-                "resource": row["resource"],
-            }
-            for row in anomalies
-        ]
-        return {"resource": resource, "anomalies": result}
-
-
 @router.get("/measurements")
-async def get_measurements(resource: str) -> list:
+async def get_measurements(resource: str) -> List[dict]:
     async with AsyncSessionLocal() as session:
         result = await session.execute(
             select(crud.Measurement).where(crud.Measurement.resource == resource)
@@ -75,7 +63,7 @@ async def get_measurements(resource: str) -> list:
                 "datetime": row.datetime.isoformat(),
                 "value": row.value,
                 "resource": row.resource,
-                "is_anomaly": row.is_anomaly
+                "is_anomaly": row.is_anomaly,
             }
             for row in result.scalars().all()
         ]

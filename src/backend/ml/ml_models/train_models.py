@@ -8,7 +8,6 @@ ex.load_data(
 )
 ex.prepare()
 print(ex.get_data)
-# ex.drop_column("gooooooal")
 print(ex.get_data.head())
 
 model = AnomalyDetector()
