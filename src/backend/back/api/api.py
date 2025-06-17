@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post("/upload")
-async def upload_dataset(file: UploadFile = File(...), resource: str = Form(...)):
+async def upload_dataset(file: UploadFile = File(...), resource: str = Form(...)) -> dict:
     try:
         contents = await file.read()
         df = pd.read_csv(pd.io.common.BytesIO(contents))
@@ -50,7 +50,7 @@ async def upload_dataset(file: UploadFile = File(...), resource: str = Form(...)
 
 
 @router.get("/anomalies")
-async def get_anomalies(resource: str):
+async def get_anomalies(resource: str) -> dict:
     async with AsyncSessionLocal() as session:
         anomalies = await crud.get_anomalies_by_resource(session, resource)
         result = [
@@ -65,7 +65,7 @@ async def get_anomalies(resource: str):
 
 
 @router.get("/measurements")
-async def get_measurements(resource: str):
+async def get_measurements(resource: str) -> list:
     async with AsyncSessionLocal() as session:
         result = await session.execute(
             select(crud.Measurement).where(crud.Measurement.resource == resource)

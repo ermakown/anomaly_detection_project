@@ -127,7 +127,10 @@ class ResourcePage:
             )
         else:
             return ft.Text(
-                f"Критический уровень аномалий. Проверьте систему {self.label} и устраните неисправности.",
+                "Критический уровень аномалий!\n"
+                f"Усерднее контролируйте потребление, а также проверьте систему {self.label} "
+                "и, при обнаружении неисправностей, "
+                "как можно скорее устраните их.",
                 font_family="sf",
                 color=self.text_color,
                 size=14,
@@ -281,12 +284,22 @@ class ResourcePage:
                             alignment="center",
                         ),
                         self.container_for_graphics(),
-                        ft.Text(
-                            "Выявленные аномалии",
-                            size=22,
-                            weight="bold",
-                            color=self.text_color,
-                            font_family="sf",
+                        ft.Row(
+                            controls=[
+                                ft.Text(
+                                    "Выявленные аномалии",
+                                    size=22,
+                                    weight="bold",
+                                    color=self.text_color,
+                                    font_family="sf",
+                                ),
+                                ft.Icon(
+                                    ft.Icons.ARROW_DOWNWARD_ROUNDED,
+                                    size=22,
+                                    color=self.text_color,
+                                ),
+                            ],
+                            alignment="center",
                         ),
                         self.container_for_anomalies(),
                     ],

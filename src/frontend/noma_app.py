@@ -4,11 +4,12 @@ import asyncio
 from view.category_page import CategoryView
 from view.home import HomePageView
 from view.resource_pages.resource_page import ResourcePage
+from view.about import About
 
 
 class NomaApp:
     def __init__(self, page: ft.Page):
-        self.page: ft.Page = page
+        self.page = page
         self.page.title = "Noma"
         self.page.vertical_alignment = ft.MainAxisAlignment.CENTER
         self.page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
@@ -29,7 +30,8 @@ class NomaApp:
         self.page.on_route_change = self.route_change
         self.views = {
             "/category": CategoryView,
-            "/home": HomePageView
+            "/home": HomePageView,
+            "/about": About
         }
 
         self.app_bar_style = ft.ButtonStyle(
@@ -48,7 +50,7 @@ class NomaApp:
         return (
             ft.Icons.LIGHT_MODE_ROUNDED
             if self.page.theme_mode == ft.ThemeMode.DARK
-            else ft.Icons.NIGHTLIGHT_ROUND_ROUNDED
+            else ft.Icons.DARK_MODE_ROUNDED
         )
 
     def toggle_theme(self, e: ft.ControlEvent) -> None:
@@ -119,6 +121,15 @@ class NomaApp:
                 ft.Row(
                     controls=[
                         ft.TextButton(
+                            text="Главная",
+                            style=self.app_bar_style,
+                            width=160,
+                            height=50,
+                            on_click=lambda e: self.page.go(
+                                "/home", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
+                        ft.TextButton(
                             text="Начать",
                             style=self.app_bar_style,
                             width=160,
@@ -128,12 +139,12 @@ class NomaApp:
                             ),
                         ),
                         ft.TextButton(
-                            text="Главная",
+                            text="О нас",
                             style=self.app_bar_style,
                             width=160,
                             height=50,
                             on_click=lambda e: self.page.go(
-                                "/home", ft.PageTransitionTheme.PREDICTIVE
+                                "/about", ft.PageTransitionTheme.PREDICTIVE
                             ),
                         ),
                         self.theme_button,
@@ -153,13 +164,6 @@ class NomaApp:
                         ),
                         ft.PopupMenuItem(),
                         ft.PopupMenuItem(
-                            icon=ft.Icons.WATER_DROP_ROUNDED,
-                            text="Вода",
-                            on_click=lambda e: self.page.go(
-                                "/water", ft.PageTransitionTheme.PREDICTIVE
-                            ),
-                        ),
-                        ft.PopupMenuItem(
                             icon=ft.Icons.ELECTRICAL_SERVICES_ROUNDED,
                             text="Электричество",
                             on_click=lambda e: self.page.go(
@@ -167,10 +171,25 @@ class NomaApp:
                             ),
                         ),
                         ft.PopupMenuItem(
+                            icon=ft.Icons.WATER_DROP_ROUNDED,
+                            text="Вода",
+                            on_click=lambda e: self.page.go(
+                                "/water", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
+                        ft.PopupMenuItem(
                             icon=ft.Icons.GAS_METER_ROUNDED,
                             text="Газ",
                             on_click=lambda e: self.page.go(
                                 "/gas", ft.PageTransitionTheme.PREDICTIVE
+                            ),
+                        ),
+                        ft.PopupMenuItem(),
+                        ft.PopupMenuItem(
+                            icon=ft.Icons.INFO_SHARP,
+                            text="О нас",
+                            on_click=lambda e: self.page.go(
+                                "/about", ft.PageTransitionTheme.PREDICTIVE
                             ),
                         ),
                     ]
